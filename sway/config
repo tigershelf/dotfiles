@@ -1,0 +1,198 @@
+### VARIABLES
+set {
+    # SHORTCUTS
+	$mod Mod4
+
+	$left h
+	$down j
+	$up k
+	$right l
+
+	$term foot
+	$menu rofi -show
+	$browser firefox
+
+	# COLORS
+	$bg #282828
+	$bg0_h #1d2021
+	$bg0 #282828
+	$bg1 #3c3836
+	$bg2 #504945
+	$bg3 #665c54
+	$bg4 #7c6f64
+	$bg0_s #32302f
+
+	$fg #ebdbb2
+	$fg0 #fbf1c7
+	$fg1 #ebdbb2
+	$fg2 #d5c4a1
+	$fg3 #bdae93
+	$fg4 #a89984
+
+	$gray #a89984
+	$red #cc241d
+	$green #98971a
+	$yellow #d79921
+	$blue #458588
+	$purple #b16286
+	$aqua #689d6a
+	$orange #d65d0e
+
+	$bright-gray #928374
+	$bright-red #fb4934
+	$bright-green #b8bb26
+	$bright-yellow #fabd2f
+	$bright-blue #83a598
+	$bright-purple #d3869b
+	$bright-aqua #8ec07c
+	$bright-orange #fe8019
+}
+
+### OUTPUT CONFIGURATION
+output * bg ~/Pictures/Wallpapers/Gruvbox/gruv-street.png fill
+
+### IDLE CONFIGURATION
+exec swayidle -w \
+timeout 300 'swaylock -f -c 000000' \
+timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+before-sleep 'swaylock -f -c 000000'
+
+### INPUT CONFIGURATION
+# none
+
+floating_modifier $mod normal
+
+### KEY BINDINGS
+bindsym {
+    ### BASICS
+    $mod+Return exec $term
+    $mod+Shift+q kill
+    $mod+d exec $menu
+
+    $mod+Shift+c reload
+    $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+
+    ### MOVING AROUND
+    $mod+$left focus left
+    $mod+$down focus down
+    $mod+$up focus up
+    $mod+$right focus right
+
+    $mod+Left focus left
+    $mod+Down focus down
+    $mod+Up focus up
+    $mod+Right focus right
+
+    $mod+Shift+$left move left
+    $mod+Shift+$down move down
+    $mod+Shift+$up move up
+    $mod+Shift+$right move right
+
+    $mod+Shift+Left move left
+    $mod+Shift+Down move down
+    $mod+Shift+Up move up
+    $mod+Shift+Right move right
+
+    ### WORKSPACES
+    $mod+1 workspace number 1
+    $mod+2 workspace number 2
+    $mod+3 workspace number 3
+    $mod+4 workspace number 4
+    $mod+5 workspace number 5
+    $mod+6 workspace number 6
+    $mod+7 workspace number 7
+    $mod+8 workspace number 8
+    $mod+9 workspace number 9
+    $mod+0 workspace number 10
+
+    $mod+Shift+1 move container to workspace number 1
+    $mod+Shift+2 move container to workspace number 2
+    $mod+Shift+3 move container to workspace number 3
+    $mod+Shift+4 move container to workspace number 4
+    $mod+Shift+5 move container to workspace number 5
+    $mod+Shift+6 move container to workspace number 6
+    $mod+Shift+7 move container to workspace number 7
+    $mod+Shift+8 move container to workspace number 8
+    $mod+Shift+9 move container to workspace number 9
+    $mod+Shift+0 move container to workspace number 10
+
+    ### LAYOUT
+    $mod+b splith
+    $mod+v splitv
+
+    $mod+s layout stacking
+    $mod+w layout tabbed
+    $mod+e layout toggle split
+
+    $mod+f fullscreen
+
+    $mod+Shift+space floating toggle
+    $mod+space focus mode_toggle
+    $mod+a focus parent
+
+    $mod+r mode "resize"
+
+    ### SCRATCHPAD
+    $mod+Shift+minus move scratchpad
+    $mod+minus scratchpad show
+
+    ### UTILITY
+        ### VOLUME
+        $mod+F12 exec pactl set-sink-mute \@DEFAULT_SINK@ toggle
+        $mod+F10 exec pactl set-sink-volume \@DEFAULT_SINK@ -5%
+        $mod+F11 exec pactl set-sink-volume \@DEFAULT_SINK@ +5%
+
+        ### BRIGHTNESS
+        $mod+F1 exec brightnessctl set 5%-
+        $mod+F2 exec brightnessctl set 5%+
+
+        ### SCREENSHOT
+        $mod+Shift+s exec grim -g "$(slurp -d)" - | wl-copy
+}
+
+### RESIZING MODE
+mode "resize" {
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+### AUTOSTART
+exec_always python ~/.config/sway/autotiling
+
+### WINDOW COLORS
+#			            Border       Background   Text   Indicator    Child Border
+client.focused          $bg4         $bg2         $fg    $bg4         $bg4
+client.focused_inactive $bright-blue $blue        $fg    $bright-blue $bright-blue
+client.urgent           $bright-red  $red         $fg    $bright-red  $bright-red
+client.unfocused        $bg0_s       $bg0_h       $fg4   $bg0_s       $bg0_s
+
+### STATUS BAR
+bar {
+    position top
+    font JetBrainsMono Nerd Font
+
+    status_command while sh ~/.config/sway/swaybar.sh; do sleep 0; done
+
+    colors {
+        statusline $fg
+        background $bg
+
+        #                  Border       Background Text
+        focused_workspace  $bg4         $bg2       $fg
+        active_workspace   $bright-blue $blue      $fg
+        inactive_workspace $bg0_s       $bg0_h     $fg4
+        urgent_workspace   $bright-red  $red       $fg
+    }
+}
+
+include /etc/sway/config.d/*
