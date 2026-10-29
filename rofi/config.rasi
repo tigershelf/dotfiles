@@ -1,4 +1,4 @@
-@theme "/usr/share/rofi/themes/gruvbox-dark.rasi
+@theme "/usr/share/rofi/themes/gruvbox-dark.rasi"
 
 configuration {
   modes: "drun,window,filebrowser";
